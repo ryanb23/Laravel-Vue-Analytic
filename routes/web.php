@@ -17,4 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('rule','RuleController');
+
+Route::post('/rule/fileupload', 'RuleController@FileUpload');
+Route::get('/rule/activate/{id}', ['uses' => 'RuleController@activate', 'as' => 'rule.activate']);
+Route::get('/rule/deactivate/{id}', ['uses' => 'RuleController@deactivate', 'as' => 'rule.deactivate']);

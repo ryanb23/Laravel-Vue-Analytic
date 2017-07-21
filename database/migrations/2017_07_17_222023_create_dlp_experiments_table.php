@@ -18,8 +18,8 @@ class CreateDlpExperimentsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name')->nullable();
-            $table->json('rules')->nullable();
-            $table->json('options');
+            $table->jsonb('rules')->nullable();
+            $table->jsonb('options');
             $table->timestamp('expiration')->nullable();
             $table->timestamps();
             $table->softDeletes();

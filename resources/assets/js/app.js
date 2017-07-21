@@ -5,6 +5,9 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+window.$ = window.jQuery = require('jquery');
+require('bootstrap-sass');
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -15,7 +18,11 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+Vue.component('add', require('./components/add.vue'));
+Vue.component('edit', require('./components/edit.vue'));
+Vue.use(require('vue-resource'));
+
+Vue.http.headers.common['X-CSRF-TOKEN'] = Laravel.csrfToken;
 
 const app = new Vue({
     el: '#app'
