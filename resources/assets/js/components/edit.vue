@@ -119,7 +119,6 @@
             getVariables: function(){
                 let exp_arr = JSON.parse(this.experimentData);
                 let that  = this;
-                console.log(exp_arr)
                 this.exp_id = exp_arr.id;
                 this.exp_name = exp_arr.name;
 

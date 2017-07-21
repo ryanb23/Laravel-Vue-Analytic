@@ -24,3 +24,24 @@ Make sure you have following installed:
 2. PHP 7
 3. Postgres
 4. [Composer](https://getcomposer.org/)
+
+## Run this project
+
+Make sure you have following installed:
+
+```
+$ composer install && npm install
+```
+
+Open ```.env``` and enter necessary config
+
+```
+$ php artisan key:generate
+$ php artisan migrate
+$ php artisan db:seed
+```
+
+Open new terminal
+```
+$ npm run watch
+```
