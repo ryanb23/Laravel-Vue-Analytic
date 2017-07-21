@@ -21,7 +21,7 @@
                             <v-select v-model="custom_rules.operator" label="value"  :options="rule_operator_type"></v-select>
                         </div>
                         <div class="col-md-3">
-                            <input type="text" v-model="custom_rules.value" placeholder="Enter value" value="">
+                            <input type="text" v-model="custom_rules.value" placeholder="Enter value">
                         </div>
                     </div>
                     <div class="row">

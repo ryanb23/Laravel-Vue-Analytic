@@ -21,7 +21,7 @@
                             <v-select v-model="custom_rules.operator" label="value"  :options="rule_operator_type"></v-select>
                         </div>
                         <div class="col-md-3">
-                            <input type="text" v-model="custom_rules.value" placeholder="Enter value" value="">
+                            <input type="text" v-model="custom_rules.value" placeholder="Enter value">
                         </div>
                     </div>
                     <div class="row">
@@ -130,7 +130,7 @@
                 this.custom_rules = {
                     variable: this.rule_variable_type[this.custom_rule_indexes['variable']],
                     operator: this.rule_operator_type[this.custom_rule_indexes['operator']],
-                    value: ''
+                    value: exp_arr.rules.value
                 }
 
 
