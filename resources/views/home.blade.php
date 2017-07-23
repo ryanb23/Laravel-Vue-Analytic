@@ -9,7 +9,7 @@
 
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 test">
                             <a href="{{ route('rule.create') }}"><button type="button" class="btn btn-primary pull-right">Create New Experiment</button></a>
                         </div>
                     </div>
