@@ -25,23 +25,23 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($experiments as $key => $row){?>
-                                    <tr class="action">
-                                        <td><?=$row['id']?></td>
-                                        <td><?=$row['name']?></td>
-                                        <td><?=$row['created_at']?></td>
-                                        <?php if(is_null($row['deleted_at'])) {?>
-                                        <td>
-                                            <a href="{{ route('rule.edit', [$row['id']]) }}"><button type="button" class="btn btn-sm btn-primary ">Edit</button></a>
-                                            <a href="{{ route('rule.activate',[$row['id']]) }}"><button type="button" class="btn btn-sm btn-danger ">Deactivate</button></a>
-                                        </td>
-                                        <?php }else{?>
-                                        <td>
-                                            <a href="{{ route('rule.deactivate',[$row['id']]) }}"><button type="button" class="btn btn-sm btn-success">Re-activate</button></a>
-                                        </td>
-                                        <?php }?>
-                                    </tr>
-                                    <?php }?>
+                                    @foreach ($experiments as $row)
+                                        <tr class="action">
+                                            <td>{{ $row['id'] }}</td>
+                                            <td>{{ $row['name'] }}</td>
+                                            <td>{{ $row['created_at']->format('M d Y')}}</td>
+                                            @if (empty($row['deleted_at']))
+                                            <td>
+                                                <a href="{{ route('rule.edit', [$row['id']]) }}"><button type="button" class="btn btn-sm btn-primary ">Edit</button></a>
+                                                <a href="{{ route('rule.activate',[$row['id']]) }}"><button type="button" class="btn btn-sm btn-danger ">Deactivate</button></a>
+                                            </td>
+                                            @else
+                                            <td>
+                                                <a href="{{ route('rule.deactivate',[$row['id']]) }}"><button type="button" class="btn btn-sm btn-success">Re-activate</button></a>
+                                            </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                               </table>
                         </div>

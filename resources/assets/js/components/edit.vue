@@ -14,14 +14,22 @@
                         <div class="col-md-12">
                             <label>Rules</label>
                         </div>
-                        <div class="col-md-3">
-                            <v-select v-model="custom_rules.variable" label="value" :options="rule_variable_type" ></v-select>
+                        <div class="col-md-12">
+                            <button v-if="has_rule == 0" v-on:click="has_rule = 1" type="button" class="btn btn-primary">Add Rule</button>
                         </div>
-                        <div class="col-md-3">
-                            <v-select v-model="custom_rules.operator" label="value"  :options="rule_operator_type"></v-select>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" v-model="custom_rules.value" placeholder="Enter value">
+                        <div v-if="has_rule == 1">
+                            <div class="col-md-3">
+                                <v-select v-model="custom_rules.variable" label="value" :options="rule_variable_type" ></v-select>
+                            </div>
+                            <div class="col-md-3">
+                                <v-select v-model="custom_rules.operator" label="value"  :options="rule_operator_type"></v-select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" v-model="custom_rules.value" required placeholder="Enter value">
+                            </div>
+                            <div class="col-md-3">
+                                <button v-on:click="has_rule = 0" type="button">-</button>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -50,7 +58,7 @@
                                     </vue-core-image-upload>
                                     <span v-if="option.value"><img v-bind:src="'../../images/'+option.value" width="50" height="50"></span>
                                 </div>
-                                <input v-if="option.type.label === 'text'" type="text" v-model="option.value" placeholder="Enter Value"  value="">
+                                <input v-if="option.type.label === 'text'" type="text" v-model="option.value" placeholder="Enter Value" required value="">
                             </div>
                             <div class="col-md-3">
                                 <button v-on:click="removeOption(index)" type="button">-</button>
@@ -88,6 +96,7 @@
         data() {
             return {
                 exp_id: null,
+                has_rule: 0,
                 exp_name : '',
                 rule_variable_type :[{label:'pagepath',value :'Page Path'},{label:'domain',value :'Domain Url'}],
                 rule_operator_type :[{label:'contain',value :'Contains'},{label:'equalto',value :'Equals to'},{label:'not_contain',value :'Not Contains'},{label:'not_equalto',value :'Not Equals to'}],
@@ -121,17 +130,21 @@
                 let that  = this;
                 this.exp_id = exp_arr.id;
                 this.exp_name = exp_arr.name;
-
                 this.custom_rule_indexes = {}
-                this.custom_rule_indexes['variable'] =  this.rule_variable_type.findIndex(x => x.label== exp_arr.rules.variable);
-                this.custom_rule_indexes['operator'] =  this.rule_operator_type.findIndex(x => x.label== exp_arr.rules.operator);
+                if(typeof exp_arr.rules.value == 'undefined' || exp_arr.rules.value == '')
+                {
+                    this.has_rule = 0;
+                }else{
+                    this.has_rule = 1;
+                    this.custom_rule_indexes['variable'] =  this.rule_variable_type.findIndex(x => x.label== exp_arr.rules.variable);
+                    this.custom_rule_indexes['operator'] =  this.rule_operator_type.findIndex(x => x.label== exp_arr.rules.operator);
 
-                this.custom_rules = {
-                    variable: this.rule_variable_type[this.custom_rule_indexes['variable']],
-                    operator: this.rule_operator_type[this.custom_rule_indexes['operator']],
-                    value: exp_arr.rules.value
+                    this.custom_rules = {
+                        variable: this.rule_variable_type[this.custom_rule_indexes['variable']],
+                        operator: this.rule_operator_type[this.custom_rule_indexes['operator']],
+                        value: exp_arr.rules.value
+                    }
                 }
-
 
                 exp_arr.options.map(function(item){
                     that.custom_options.push({
@@ -150,10 +163,14 @@
               }
             },
             storeRules: function(e){
-                let rule_param = {
-                    variable    : this.custom_rules.variable['label'],
-                    operator    : this.custom_rules.operator['label'],
-                    value       : this.custom_rules.value
+                let rule_param = {}
+                if(this.has_rule)
+                {
+                    rule_param = {
+                        variable    : this.custom_rules.variable['label'],
+                        operator    : this.custom_rules.operator['label'],
+                        value       : this.custom_rules.value
+                    }
                 }
 
                 let option_param = this.custom_options.map((item)=>{
