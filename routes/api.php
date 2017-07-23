@@ -20,4 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('auth/register', 'UserController@register');
 Route::post('auth/login', 'UserController@login');
 
-Route::post('postRule', 'RuleController@store');
+Route::post('getExpInfo', 'ApiController@getExpInfo');
