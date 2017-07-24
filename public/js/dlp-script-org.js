@@ -34,11 +34,11 @@ if(exp_id != null)
                         obj.src = value;
                 }
             }
-        }
+        }  
     };
 
     var params = "fullName="+fullName+"&domainName="+domainName+"&pathName="+pathName;
-    xhttp.open("POST", "http://dev.local.dlp/api/getExpInfo", true);
+    xhttp.open("POST", "http://dlp-app.herokuapp.com/api/getExpInfo", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(params);
 }
