@@ -68,7 +68,8 @@ class ApiController extends Controller
             $experiments = $user_info->experiments;
             $rules = json_decode($experiments[0]->rules);
             $options = json_decode($experiments[0]->options);
-            if($rules != '' && count($rules))
+            $is_valid = 1;
+            if($rules != '' && isset($rules->variable))
             {
                 switch($rules->variable)
                 {
