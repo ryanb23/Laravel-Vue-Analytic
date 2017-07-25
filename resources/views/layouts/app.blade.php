@@ -82,6 +82,5 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/dlp-script.js') }}"></script>
 </body>
 </html>

@@ -45,6 +45,10 @@ class ApiController extends Controller
 
     public function getExpInfo()
     {
+        header('content-type: application/json; charset=utf-8');
+        header("access-control-allow-origin: *");
+
+
         $fullName = $_POST['fullName'];
         $pathName = $_POST['pathName'];
         $domainName = $_POST['domainName'];
