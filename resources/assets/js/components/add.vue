@@ -56,7 +56,7 @@
                                       :data="{id:index}"
                                       >
                                     </vue-core-image-upload>
-                                    <span v-if="option.value"><img v-bind:src="'../../images/'+option.value" width="50" height="50"></span>
+                                    <span v-if="option.value">{{option.org_filename}}</span>
                                 </div>
                                 <input v-if="option.type.label === 'text'" type="text" v-model="option.value" placeholder="Enter Value" required  value="">
                             </div>
@@ -116,6 +116,11 @@
                 })
             },
             removeOption: function(id){
+                if(this.custom_options.length == 1)
+                {
+                    alert("You need at least one option!")
+                    return;
+                }
                 if(confirm("Do you really want to remove this option?"))
                 {
                     this.custom_options.splice(id,1)
@@ -131,12 +136,14 @@
                     css_selector: '',
                     type: this.option_type[0],
                     value: '',
+                    org_filename: ''
                 })
             },
             imageuploaded: function(res) {
               if (res.errors == false) {
                   let data = res.data;
-                  this.custom_options[data.id].value = data.filename
+                  this.custom_options[data.id].value = data.filename;
+                  this.custom_options[data.id].org_filename = data.org_filename;
               }
             },
             storeRules: function(e){
@@ -151,13 +158,24 @@
                 }
 
                 let option_param = this.custom_options.map((item)=>{
-                    return {
+                    let tmp_result = {
                         css_selector    : item.css_selector,
                         type            : item.type['label'],
                         value           : item.value
                     }
-                })
 
+                    if(item.type['label'] == 'image')
+                        tmp_result['org_filename'] = item.org_filename
+                    return tmp_result
+                })
+                for(var i=0; i<this.custom_options.length; i++)
+                {
+                    if(this.custom_options[i].type['label'] == 'image' && (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined'))
+                    {
+                        alert('Please upload image file');
+                        e.preventDefault();
+                    }
+                }
                 this.param = JSON.stringify({
                     exp_id: this.exp_id,
                     rules: JSON.stringify(rule_param),

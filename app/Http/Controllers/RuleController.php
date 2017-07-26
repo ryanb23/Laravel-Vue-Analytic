@@ -29,7 +29,7 @@ class RuleController extends Controller
     public function index()
     {
         $user = Auth::User();
-        $experiments = $user->experiments()->withTrashed()->orderby('id')->get();
+        $experiments = $user->experiments()->withTrashed()->orderby('created_at','desc')->get();
         return view('home')->with('experiments', $experiments);
     }
 

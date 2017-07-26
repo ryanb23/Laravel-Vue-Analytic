@@ -16,9 +16,9 @@ class ApiController extends Controller
 
     }
 
-    private function getImagePath($url){
+    private function getImagePath($filename){
         $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
-        return $protocol.$_SERVER['SERVER_NAME'].'/images/'.$url;
+        return $protocol.$_SERVER['SERVER_NAME'].'/'.env('UPLOAD_DIR').'/'.$filename;
     }
 
     private function checkRule($str1, $str2, $operator){
@@ -56,47 +56,54 @@ class ApiController extends Controller
 
         $querystring = parse_url($fullName, PHP_URL_QUERY);
         parse_str($querystring, $vars);
-        $exp_id = $vars['exp_id'];
+        $exp_id = isset($vars['exp_id']) ? $vars['exp_id'] : null ;
 
-        $user_info = User::with('experiments')->whereHas('experiments', function($query) use($exp_id){
-            $query->where('id',$exp_id);
-        })->where('domain_url',$domainName)
-        ->first();
+        $experiment = Experiments::with('user')->find($exp_id);
 
-        if(isset($user_info->experiments) && count($user_info->experiments))
+        if($experiment)
         {
-            $experiments = $user_info->experiments;
-            $rules = json_decode($experiments[0]->rules);
-            $options = json_decode($experiments[0]->options);
-            $is_valid = 1;
-            if($rules != '' && isset($rules->variable))
-            {
-                switch($rules->variable)
-                {
-                    case 'domain':
-                        $is_valid = self::checkRule($domainName,$rules->value, $rules->operator);
-                        break;
-                    case 'pagepath':
-                        $is_valid = self::checkRule($pathName,$rules->value, $rules->operator);
-                        break;
-                    default:
-                        $is_valid =0;
-                        break;
+            if (isset($experiment->user->domain_url)) {
+                if ($experiment->user->domain_url === $domainName) {
+                    $rules = json_decode($experiment->rules);
+                    $options = json_decode($experiment->options);
+                    $is_valid = 1;
+                    if($rules != '' && isset($rules->variable))
+                    {
+                        switch($rules->variable)
+                        {
+                            case 'domain':
+                                $is_valid = self::checkRule($domainName,$rules->value, $rules->operator);
+                                break;
+                            case 'pagepath':
+                                $is_valid = self::checkRule($pathName,$rules->value, $rules->operator);
+                                break;
+                            default:
+                                $is_valid =0;
+                                break;
+                        }
+                    }
+                    if($is_valid)
+                    {
+                        foreach($options as &$item)
+                        {
+                            if($item->type == 'image')
+                            {
+                                $item->value = self::getImagePath($item->value);
+                            }
+                        }
+                        return response()->success($options);
+                    }else{
+                        // Rule doesn't match
+                        return response()->error('Rule not match', 405);
+                    }
+                } else {
+                    // User is accessing experiment that doesn't belong to user
+                    return response()->error('Forbidden', 403);
                 }
             }
-        }
-        if($is_valid)
-        {
-            foreach($options as &$item)
-            {
-                if($item->type == 'image')
-                {
-                    $item->value = self::getImagePath($item->value);
-                }
-            }
-            return response()->success($options);
         }else{
-            return response()->error('no match',201);
+            // No experiment found
+            return response()->error('Not found', 404);
         }
     }
 }
