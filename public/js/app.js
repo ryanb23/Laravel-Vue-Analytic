@@ -15883,6 +15883,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         removeOption: function removeOption(id) {
+            if (this.custom_options.length == 1) {
+                alert("You need at least one option!");
+                return;
+            }
             if (confirm("Do you really want to remove this option?")) {
                 this.custom_options.splice(id, 1);
             }
@@ -15896,13 +15900,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.custom_options.push({
                 css_selector: '',
                 type: this.option_type[0],
-                value: ''
+                value: '',
+                org_filename: ''
             });
         },
         imageuploaded: function imageuploaded(res) {
             if (res.errors == false) {
                 var data = res.data;
                 this.custom_options[data.id].value = data.filename;
+                this.custom_options[data.id].org_filename = data.org_filename;
             }
         },
         storeRules: function storeRules(e) {
@@ -15916,13 +15922,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             var option_param = this.custom_options.map(function (item) {
-                return {
+                var tmp_result = {
                     css_selector: item.css_selector,
                     type: item.type['label'],
                     value: item.value
                 };
-            });
 
+                if (item.type['label'] == 'image') tmp_result['org_filename'] = item.org_filename;
+                return tmp_result;
+            });
+            for (var i = 0; i < this.custom_options.length; i++) {
+                if (this.custom_options[i].type['label'] == 'image' && (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined')) {
+                    alert('Please upload image file');
+                    e.preventDefault();
+                }
+            }
             this.param = JSON.stringify({
                 exp_id: this.exp_id,
                 rules: JSON.stringify(rule_param),
@@ -16065,6 +16079,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         removeOption: function removeOption(id) {
+            if (this.custom_options.length == 1) {
+                alert("You need at least one option!");
+                return;
+            }
             if (confirm("Do you really want to remove this option?")) {
                 this.custom_options.splice(id, 1);
             }
@@ -16122,13 +16140,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             var option_param = this.custom_options.map(function (item) {
-                return {
+                var tmp_result = {
                     css_selector: item.css_selector,
                     type: item.type['label'],
-                    value: item.value,
-                    org_filename: item.org_filename
+                    value: item.value
                 };
+
+                if (item.type['label'] == 'image') tmp_result['org_filename'] = item.org_filename;
+                return tmp_result;
             });
+
+            for (var i = 0; i < this.custom_options.length; i++) {
+                if (this.custom_options[i].type['label'] == 'image' && (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined')) {
+                    alert('Please upload image file');
+                    e.preventDefault();
+                }
+            }
 
             this.param = JSON.stringify({
                 exp_id: this.exp_id,
@@ -33938,13 +33965,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       on: {
         "imageuploaded": _vm.imageuploaded
       }
-    }), _vm._v(" "), (option.value) ? _c('span', [_c('img', {
-      attrs: {
-        "src": '../../images/' + option.value,
-        "width": "50",
-        "height": "50"
-      }
-    })]) : _vm._e()], 1) : _vm._e(), _vm._v(" "), (option.type.label === 'text') ? _c('input', {
+    }), _vm._v(" "), (option.value) ? _c('span', [_vm._v(_vm._s(option.org_filename))]) : _vm._e()], 1) : _vm._e(), _vm._v(" "), (option.type.label === 'text') ? _c('input', {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -34459,13 +34480,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       on: {
         "imageuploaded": _vm.imageuploaded
       }
-    }), _vm._v(" "), (option.value) ? _c('span', [_c('img', {
-      attrs: {
-        "src": '../../images/' + option.value,
-        "width": "50",
-        "height": "50"
-      }
-    })]) : _vm._e()], 1) : _vm._e(), _vm._v(" "), (option.type.label === 'text') ? _c('input', {
+    }), _vm._v(" "), (option.value) ? _c('span', [_vm._v(_vm._s(option.org_filename))]) : _vm._e()], 1) : _vm._e(), _vm._v(" "), (option.type.label === 'text') ? _c('input', {
       directives: [{
         name: "model",
         rawName: "v-model",
