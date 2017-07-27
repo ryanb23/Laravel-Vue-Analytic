@@ -2,11 +2,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading"><h2>Custom Rules</h2></div>
+                <div class="panel-heading"><h2>Edit Experiment</h2></div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <label for="experiment_id">Experiment ID</label>
                             <input type="text" id="experiment_id" placeholder="Experiment name" v-model="exp_name" name="exp_name" value="">
                         </div>
                     </div>
@@ -15,7 +14,7 @@
                             <label>Rules</label>
                         </div>
                         <div class="col-md-12">
-                            <button v-if="has_rule == 0" v-on:click="has_rule = 1" type="button" class="btn btn-primary">Add Rule</button>
+                            <button v-if="has_rule == 0" v-on:click="has_rule = 1" type="button" class="btn btn-sm btn-primary">Add Rule</button>
                         </div>
                         <div v-if="has_rule == 1">
                             <div class="col-md-3">
@@ -37,7 +36,6 @@
                             <label>Options</label>
                         </div>
                     </div>
-
                     <ul>
                         <li v-for="(option, index) in custom_options" class="row option_item">
                             <div class="col-md-3">
@@ -49,14 +47,15 @@
                             <div class="col-md-3">
                                 <div v-if="option.type.label === 'image'">
                                     <vue-core-image-upload
-                                      :class="['btn', 'btn-primary']"
+                                      :class="['btn', 'btn-primary', 'btn-sm']"
                                       @imageuploaded="imageuploaded"
                                       :max-file-size="5242880"
                                       url="/rule/fileupload"
                                       :data="{id:index}"
                                       >
                                     </vue-core-image-upload>
-                                    <span v-if="option.value">{{option.org_filename}}</span>
+                                    <br />
+                                    <div v-if="option.value" id="img-filename"><img v-bind:src="'../../images/'+option.value" height="50"></div>
                                 </div>
                                 <input v-if="option.type.label === 'text'" type="text" v-model="option.value" placeholder="Enter Value" required value="">
                             </div>
@@ -68,7 +67,7 @@
 
                     <div class="row">
                         <div class="col-md-9">
-                            <button v-on:click="addOption" class="pull-right" type="button" >New Options</button>
+                            <button v-on:click="addOption" class="pull-right" type="button">New Options</button>
                         </div>
                     </div>
                     <div class="" style="margin-top:20px">
@@ -98,9 +97,33 @@
                 exp_id: null,
                 has_rule: 0,
                 exp_name : '',
-                rule_variable_type :[{label:'pagepath',value :'Page Path'},{label:'domain',value :'Domain Url'}],
-                rule_operator_type :[{label:'contain',value :'Contains'},{label:'equalto',value :'Equals to'},{label:'not_contain',value :'Not Contains'},{label:'not_equalto',value :'Not Equals to'}],
-                option_type :[{label:'text',value :'Text'},{label:'image',value :'Image'}],
+                rule_variable_type :[{
+                    label:'pagepath',
+                    value :'Page Path'
+                }, {
+                    label:'domain',
+                    value :'Domain Url'
+                }],
+                rule_operator_type :[{
+                    label:'contain',
+                    value :'Contains'
+                }, {
+                    label:'equalto',
+                    value :'Equals to'
+                }, {
+                    label:'not_contain',
+                    value :'Not Contains'
+                }, {
+                    label:'not_equalto',
+                    value :'Not Equals to'
+                }],
+                option_type :[{
+                    label:'text',
+                    value :'Text'
+                }, {
+                    label:'image',
+                    value :'Image'
+                }],
                 custom_rules : {},
                 custom_options: [],
                 param: '',
@@ -111,7 +134,7 @@
             this.getVariables()
         },
         methods: {
-            addOption: function(event){
+            addOption: function(event) {
                 this.custom_options.push({
                     css_selector: '',
                     type: this.option_type[0],
@@ -119,27 +142,24 @@
                     org_filename: ''
                 })
             },
-            removeOption: function(id){
-                if(this.custom_options.length == 1)
-                {
-                    alert("You need at least one option!")
+            removeOption: function(id) {
+                if (this.custom_options.length == 1) {
+                    alert("At least one option required.")
                     return;
                 }
-                if(confirm("Do you really want to remove this option?"))
-                {
-                    this.custom_options.splice(id,1)
+                if (confirm("Do you really want to remove this option?")) {
+                    this.custom_options.splice(id, 1)
                 }
             },
-            getVariables: function(){
+            getVariables: function() {
                 let exp_arr = JSON.parse(this.experimentData);
                 let that  = this;
                 this.exp_id = exp_arr.id;
                 this.exp_name = exp_arr.name;
                 this.custom_rule_indexes = {}
-                if(typeof exp_arr.rules.value == 'undefined' || exp_arr.rules.value == '')
-                {
+                if (typeof exp_arr.rules.value == 'undefined' || exp_arr.rules.value == '') {
                     this.has_rule = 0;
-                }else{
+                } else {
                     this.has_rule = 1;
                     this.custom_rule_indexes['variable'] =  this.rule_variable_type.findIndex(x => x.label== exp_arr.rules.variable);
                     this.custom_rule_indexes['operator'] =  this.rule_operator_type.findIndex(x => x.label== exp_arr.rules.operator);
@@ -151,7 +171,7 @@
                     }
                 }
 
-                exp_arr.options.map(function(item){
+                exp_arr.options.map(function(item) {
                     that.custom_options.push({
                         css_selector    : item.css_selector,
                         type            : that.option_type[that.option_type.findIndex(x => x.label== item.type)],
@@ -169,8 +189,7 @@
             },
             storeRules: function(e){
                 let rule_param = {}
-                if(this.has_rule)
-                {
+                if (this.has_rule) {
                     rule_param = {
                         variable    : this.custom_rules.variable['label'],
                         operator    : this.custom_rules.operator['label'],
@@ -178,23 +197,22 @@
                     }
                 }
 
-                let option_param = this.custom_options.map((item)=>{
+                let option_param = this.custom_options.map((item) => {
                     let tmp_result = {
                         css_selector    : item.css_selector,
                         type            : item.type['label'],
                         value           : item.value
                     }
 
-                    if(item.type['label'] == 'image')
+                    if (item.type['label'] == 'image')
                         tmp_result['org_filename'] = item.org_filename
                     return tmp_result
                 })
 
-                for(var i=0; i<this.custom_options.length; i++)
-                {
-                    if(this.custom_options[i].type['label'] == 'image' && (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined'))
-                    {
-                        alert('Please upload image file');
+                for (var i = 0; i < this.custom_options.length; i++) {
+                    if (this.custom_options[i].type['label'] == 'image' && 
+                        (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined')) {
+                        alert('Please upload image.');
                         e.preventDefault();
                     }
                 }
@@ -210,8 +228,8 @@
 </script>
 
 <style lang="less" scoped>
-ul{
-    li{
+ul {
+    li {
         list-style: none;
         margin-bottom: 10px
     }
@@ -222,5 +240,8 @@ ul{
     }
     margin:0px;
     padding:0px;
+}
+#img-filename {
+    margin-top: 10px;
 }
 </style>
