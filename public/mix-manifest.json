@@ -3,5 +3,6 @@
   "/css/app.css": "/css/app.css",
   "dlp-script.js": "dlp-script.js",
   "/gsjs/app.js": "/gsjs/app.js",
-  "/js/dlp-script.js": "/js/dlp-script.js"
+  "/js/dlp-script.js": "/js/dlp-script.js",
+  "/js/dlp-min.js": "/js/dlp-min.js"
 }
