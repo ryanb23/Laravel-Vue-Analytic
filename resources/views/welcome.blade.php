@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ config('app.locale') }}">
     <head>
+        <script src="/js/dlp-script-org.js"></script>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -81,7 +82,7 @@
                 <div class="title m-b-md">
                     Laravel
                 </div>
-
+                <p><img id="laravel-img" src="https://forge.laravel.com/images/ui-preview.png" height="200px" /></p>
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
                     <a href="https://laracasts.com">Laracasts</a>
@@ -90,6 +91,7 @@
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>
+
         </div>
     </body>
 </html>

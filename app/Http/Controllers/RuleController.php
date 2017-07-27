@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use App\Experiments;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Experiments;
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class RuleController extends Controller
 {
@@ -16,8 +16,7 @@ class RuleController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
     }
 
@@ -26,66 +25,71 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         $user = Auth::User();
         $experiments = $user->experiments()->withTrashed()->orderby('created_at','desc')->get();
         return view('home')->with('experiments', $experiments);
     }
 
     /**
-     * create Rule
+     * Create new experiment.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('add');
     }
 
     /**
-     * edit Rule
+     * Edit experiment.
      *
+     * @param  int  $id  ID of experiment to edit.
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $exp_id = $id;
-        $experiment = Experiments::find($exp_id)->toArray();
+    public function edit($id) {
+        $experiment = Experiments::find($id)->toArray();
         $experiment['rules'] = json_decode($experiment['rules']);
         $experiment['options'] = json_decode($experiment['options']);
-        return view('edit')->with(array('id'=>$exp_id,'experiment'=>$experiment));
+        return view('edit')->with(array(
+            'id' => $id,
+            'experiment' => $experiment
+        ));
     }
 
-    /** activate rule
-    **/
-    public function activate(Request $request,$id)
-    {
-        $exp_id = $id;
-        $experiment = Experiments::find($exp_id);
-        $experiment->deleted_at = \Carbon\Carbon::now()->toDateTimeString();
+    /**
+     * Re-active an experiment that was deactivated.
+     *
+     * @param   Request  $request  
+     * @param   int   $id  ID of experiment.
+     * @return  Response
+     */
+    public function activate(Request $request, $id) {
+        $experiment = Experiments::find($id);
+        $experiment->deleted_at = Carbon::now()->toDateTimeString();
         $experiment->save();
         return redirect('/rule');
     }
 
-    /** de-activate rule
-    **/
-    public function deactivate(Request $request,$id)
-    {
-        $exp_id = $id;
-        $experiment = Experiments::withTrashed()->find($exp_id);
+    /**
+     * Deactivate an experiment by soft deleting.
+     *
+     * @param   Request  $request   
+     * @param   int   $id  ID of experiment.
+     * @return  Response
+     */
+    public function deactivate(Request $request, $id) {
+        $experiment = Experiments::withTrashed()->find($id);
         $experiment->deleted_at = null;
         $experiment->save();
         return redirect('/rule');
     }
 
     /**
-     * update Rule
+     * Update the experiment.
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
-    {
+    public function update(Request $request, $id) {
         $exp_id = $id;
         $exp_name = $request['exp_name'];
         $custom_options  = json_decode($request['custom_options']);
@@ -103,14 +107,13 @@ class RuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
+    public function store(Request $request) {
         $exp_name = $request['exp_name'];
         $custom_options  = json_decode($request['custom_options']);
         $user = Auth::User();
-        $user_id = $user->id;
 
         $experiment = new Experiments();
-        $experiment->user_id = $user_id;
+        $experiment->user_id = $user->id;
         $experiment->name = $exp_name;
         $experiment->rules = $custom_options->rules;
         $experiment->options = $custom_options->options;
@@ -119,8 +122,13 @@ class RuleController extends Controller
 
     }
 
-    public function FileUpload(Request $request)
-    {
+    /**
+     * Upload file to directory path of env('UPLOAD_DIR')
+     *
+     * @param  Request  $request  
+     * @return  Response
+     */
+    public function FileUpload(Request $request) {
         $id = $_POST['id'];
         $upload_dir = env('UPLOAD_DIR');
         if (!file_exists($upload_dir)) {
@@ -133,8 +141,7 @@ class RuleController extends Controller
         $filename = $path_parts['filename'].'_'.time().$file_extension;
         $file_des = $upload_dir.'/'.$filename;
 
-        if (move_uploaded_file($_FILES['files']['tmp_name'], $file_des))
-        {
+        if (move_uploaded_file($_FILES['files']['tmp_name'], $file_des)) {
             $result = array(
                 'id'            => $id,
                 'type'          => $_FILES['files']['type'],

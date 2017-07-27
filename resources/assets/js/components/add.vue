@@ -2,11 +2,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading"><h2>Custom Rules</h2></div>
+                <div class="panel-heading"><h2>Experiment</h2></div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-8">
-                            <label for="experiment_id">Experiment ID</label>
+                            <label for="experiment_id">Experiment Name</label>
                             <input type="text" id="experiment_id" placeholder="Experiment name" v-model="exp_name" name="exp_name" value="">
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                                       :data="{id:index}"
                                       >
                                     </vue-core-image-upload>
-                                    <span v-if="option.value">{{option.org_filename}}</span>
+                                    <br /><span v-if="option.value">{{ option.org_filename }}</span>
                                 </div>
                                 <input v-if="option.type.label === 'text'" type="text" v-model="option.value" placeholder="Enter Value" required  value="">
                             </div>
@@ -67,7 +67,7 @@
                     </ul>
                     <div class="row">
                         <div class="col-md-9">
-                            <button v-on:click="addOption" class="pull-right" type="button" >New Options</button>
+                            <button v-on:click="addOption" class="pull-right" type="button">New Options</button>
                         </div>
                     </div>
                     <div class="" style="margin-top:20px">
@@ -87,7 +87,7 @@
     import vSelect from "vue-select"
 
     export default {
-        components:{
+        components: {
             'vue-core-image-upload': VueCoreImageUpload,
             'v-select': vSelect
         },
@@ -108,25 +108,23 @@
             this.getVariables()
         },
         methods: {
-            addOption: function(event){
+            addOption: function(event) {
                 this.custom_options.push({
                     css_selector: '',
                     type: this.option_type[0],
                     value: ''
                 })
             },
-            removeOption: function(id){
-                if(this.custom_options.length == 1)
-                {
-                    alert("You need at least one option!")
+            removeOption: function(id) {
+                if (this.custom_options.length == 1) {
+                    alert("At least one option required.")
                     return;
                 }
-                if(confirm("Do you really want to remove this option?"))
-                {
-                    this.custom_options.splice(id,1)
+                if (confirm("Do you really want to remove this option?")) {
+                    this.custom_options.splice(id, 1)
                 }
             },
-            getVariables: function(){
+            getVariables: function() {
                 this.custom_rules = {
                     variable: this.rule_variable_type[0],
                     operator: this.rule_operator_type[0],
@@ -146,10 +144,9 @@
                   this.custom_options[data.id].org_filename = data.org_filename;
               }
             },
-            storeRules: function(e){
+            storeRules: function(e) {
                 let rule_param = {}
-                if(this.has_rule)
-                {
+                if (this.has_rule) {
                     rule_param = {
                         variable    : this.custom_rules.variable['label'],
                         operator    : this.custom_rules.operator['label'],
@@ -157,22 +154,21 @@
                     }
                 }
 
-                let option_param = this.custom_options.map((item)=>{
+                let option_param = this.custom_options.map((item) => {
                     let tmp_result = {
                         css_selector    : item.css_selector,
                         type            : item.type['label'],
                         value           : item.value
                     }
 
-                    if(item.type['label'] == 'image')
+                    if (item.type['label'] == 'image')
                         tmp_result['org_filename'] = item.org_filename
                     return tmp_result
                 })
-                for(var i=0; i<this.custom_options.length; i++)
-                {
-                    if(this.custom_options[i].type['label'] == 'image' && (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined'))
-                    {
-                        alert('Please upload image file');
+                for (var i = 0; i < this.custom_options.length; i++) {
+                    if (this.custom_options[i].type['label'] == 'image' && 
+                       (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined')) {
+                        alert('Please upload image file.');
                         e.preventDefault();
                     }
                 }
@@ -187,8 +183,8 @@
 </script>
 
 <style lang="less" scoped>
-ul{
-    li{
+ul {
+    li {
         list-style: none;
         margin-bottom: 10px
     }
