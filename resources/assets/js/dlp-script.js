@@ -9,7 +9,7 @@ var domainName = window.location.hostname;
 var pathName = window.location.pathname;
 var fullName = window.location.href;
 
-var exp_id = extractUrlValue('exp_id',fullName)
+var exp_id = extractUrlValue('exp_id', fullName);
 if (exp_id != null) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -39,8 +39,8 @@ if (exp_id != null) {
 
     var params = "fullName="+fullName+"&domainName="+domainName+"&pathName="+pathName;
     //xhttp.open("POST", "http://dev.local.dlp/api/getExpInfo", true);
-    xhttp.open("POST", "https://adloha-dlp.dev/api/getExpInfo", true);
-    //xhttp.open("POST", "https://dlp-app.herokuapp.com/api/getExpInfo", true);
+    //xhttp.open("POST", "https://adloha-dlp.dev/api/getExpInfo", true);
+    xhttp.open("POST", "https://dlp-app.herokuapp.com/api/getExpInfo", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(params);
 }
