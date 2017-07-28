@@ -152,7 +152,7 @@
                 }
             },
             getVariables: function() {
-                let exp_arr = JSON.parse(this.experimentData);
+                let exp_arr = this.experimentData;
                 let that  = this;
                 this.exp_id = exp_arr.id;
                 this.exp_name = exp_arr.name;
@@ -210,7 +210,7 @@
                 })
 
                 for (var i = 0; i < this.custom_options.length; i++) {
-                    if (this.custom_options[i].type['label'] == 'image' && 
+                    if (this.custom_options[i].type['label'] == 'image' &&
                         (this.custom_options[i].org_filename == '' || typeof this.custom_options[i].org_filename == 'undefined')) {
                         alert('Please upload image.');
                         e.preventDefault();
