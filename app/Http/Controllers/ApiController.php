@@ -19,8 +19,8 @@ class ApiController extends Controller
     /**
      * Return full path of filename.
      *
-     * @param   string  $filename  
-     * @return  string             
+     * @param   string  $filename
+     * @return  string
      */
     private function getImagePath($filename) {
         $protocol = request()->secure() ? 'https://' : 'http://';
@@ -28,24 +28,24 @@ class ApiController extends Controller
     }
 
     /**
-     * Check experiment rules to see if its valid to run. 
+     * Check experiment rules to see if its valid to run.
      *
      * @param   string  $str1      Variable name.
      * @param   string  $str2      Value to check against.
      * @param   string  $operator  Comparison operator.
-     * @return  bool             
+     * @return  bool
      */
     private function checkRule($str1, $str2, $operator): bool {
         $valid = 0;
         switch ($operator) {
             case 'contain':
-                $valid = preg_match('/'.$str2.'/i', $str1);
+                $valid = strpos($str1, $str2);
                 break;
             case 'equalto':
                 $valid = ($str1 === $str2);
                 break;
             case 'not_contain':
-                $valid = !preg_match('/'.$str2.'/i', $str1);
+                $valid = !strpos($str1, $str2);
                 break;
             case 'not_equalto':
                 $valid = !($str1 === $str2);
@@ -60,7 +60,7 @@ class ApiController extends Controller
     /**
      * API call to run experiment.
      *
-     * @return  Response  
+     * @return  Response
      */
     public function getExpInfo()
     {
