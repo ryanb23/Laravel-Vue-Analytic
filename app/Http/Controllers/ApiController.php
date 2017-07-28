@@ -31,7 +31,7 @@ class ApiController extends Controller
             $protocol = request()->secure() ? 'https://' : 'http://';
         }
         $protocol = 'https://';
-        echo $request->header('x-forwarded-proto');
+        //echo $request->header('x-forwarded-proto');
         return $protocol.$_SERVER['SERVER_NAME'].'/'.env('UPLOAD_DIR').'/'.$filename;
     }
 
