@@ -159,11 +159,15 @@
                 this.custom_rule_indexes = {}
                 if (typeof exp_arr.rules.value == 'undefined' || exp_arr.rules.value == '') {
                     this.has_rule = 0;
+                    this.custom_rules = {
+                        variable: this.rule_variable_type[0],
+                        operator: this.rule_operator_type[0],
+                        value: ''
+                    }
                 } else {
                     this.has_rule = 1;
                     this.custom_rule_indexes['variable'] =  this.rule_variable_type.findIndex(x => x.label== exp_arr.rules.variable);
                     this.custom_rule_indexes['operator'] =  this.rule_operator_type.findIndex(x => x.label== exp_arr.rules.operator);
-
                     this.custom_rules = {
                         variable: this.rule_variable_type[this.custom_rule_indexes['variable']],
                         operator: this.rule_operator_type[this.custom_rule_indexes['operator']],
