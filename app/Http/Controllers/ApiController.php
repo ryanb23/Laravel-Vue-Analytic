@@ -36,22 +36,22 @@ class ApiController extends Controller
      * @return  bool
      */
     private function checkRule($str1, $str2, $operator): bool {
-        $valid = 0;
+        $valid = false;
         switch ($operator) {
             case 'contain':
-                $valid = strpos($str1, $str2);
+                $valid = (strpos($str1, $str2) !== false) ? true : false;
+                break;
+            case 'not_contain':
+                $valid = (strpos($str1, $str2) === false) ? true : false;
                 break;
             case 'equalto':
                 $valid = ($str1 === $str2);
                 break;
-            case 'not_contain':
-                $valid = !strpos($str1, $str2);
-                break;
             case 'not_equalto':
-                $valid = !($str1 === $str2);
+                $valid = ($str1 !== $str2);
                 break;
             default:
-                $valid = 0;
+                $valid = false;
                 break;
         }
         return $valid;
@@ -62,8 +62,7 @@ class ApiController extends Controller
      *
      * @return  Response
      */
-    public function getExpInfo()
-    {
+    public function getExpInfo() {
         header('content-type: application/json; charset=utf-8');
         header("access-control-allow-origin: *");
 
@@ -86,10 +85,10 @@ class ApiController extends Controller
                     if ($rules != '' && isset($rules->variable)) {
                         switch ($rules->variable) {
                             case 'domain':
-                                $is_valid = self::checkRule($domainName,$rules->value, $rules->operator);
+                                $is_valid = self::checkRule($domainName, $rules->value, $rules->operator);
                                 break;
                             case 'pagepath':
-                                $is_valid = self::checkRule($pathName,$rules->value, $rules->operator);
+                                $is_valid = self::checkRule($pathName, $rules->value, $rules->operator);
                                 break;
                             default:
                                 $is_valid = 0;
@@ -112,6 +111,7 @@ class ApiController extends Controller
                     return response()->error('Unauthorized', 401);
                 }
             } else {
+                // User hasn't assigned domain url in settings
                 return response()->error('Check domain url', 403);
             }
         } else {
