@@ -9,4 +9,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 .env
-/public/images
+/public/images/*
+!/public/images/.gitkeep
