@@ -25,11 +25,11 @@ class ApiController extends Controller
     private function getImagePath($filename) {
         // Heroku passes X-Forwarded-Proto in the headers. 
         // See https://devcenter.heroku.com/articles/http-routing#heroku-headers
-        if (env('APP_ENV') === 'production') {
+        /*if (env('APP_ENV') === 'production') {
             $protocol = ($request->header('x-forwarded-proto') === 'https') ? 'https://' : 'http://';    
-        } else {
+        } else {*/
             $protocol = request()->secure() ? 'https://' : 'http://';
-        }
+        //}
         
         return $protocol.$_SERVER['SERVER_NAME'].'/'.env('UPLOAD_DIR').'/'.$filename;
     }
