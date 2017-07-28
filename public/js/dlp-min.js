@@ -1,1 +1,46 @@
-function extractUrlValue(e,t){void 0===t&&(t=window.location.href);var a=t.match("[?&]"+e+"=([^&]+)");return a?a[1]:null}var domainName=window.location.hostname,pathName=window.location.pathname,fullName=window.location.href,exp_id=extractUrlValue("exp_id",fullName);if(null!=exp_id){var xhttp=new XMLHttpRequest;xhttp.onreadystatechange=function(){if(4==this.readyState&&200==this.status)for(var e=JSON.parse(this.responseText),t=e.data,a=0;a<t.length;a++){var n=t[a].css_selector,o=t[a].type,p=t[a].value,r=document.querySelector(n);null!=r&&("text"==o?r.innerHTML=p:"image"==o&&(r.src=p))}};var params="fullName="+fullName+"&domainName="+domainName+"&pathName="+pathName;xhttp.open("POST","https://dlp-app.herokuapp.com/api/getExpInfo",!0),xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"),xhttp.send(params)}
+function extractUrlValue(key, url) {
+    if (typeof(url) === 'undefined')
+        url = window.location.href;
+    var match = url.match('[?&]' + key + '=([^&]+)');
+    return match ? match[1] : null;
+}
+
+var domainName = window.location.hostname;
+var pathName = window.location.pathname;
+var fullName = window.location.href;
+
+var exp_id = extractUrlValue('exp_id', fullName);
+if (exp_id != null) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                var response = JSON.parse(this.responseText);
+                var options = response.data;
+
+                for (var i = 0; i < options.length; i++) {
+                    var css_selector = options[i]['css_selector'];
+                    var type = options[i]['type'];
+                    var value = options[i]['value'];
+                    var obj = document.querySelector(css_selector);
+
+                    if (obj != null) {
+                        if (type == 'text')
+                            obj.innerHTML = value;
+                        else if (type == 'image')
+                            obj.src = value;
+                    }
+                }
+            } else {
+                console.log(this.response);
+            }
+        }
+    };
+
+    var params = "fullName="+fullName+"&domainName="+domainName+"&pathName="+pathName;
+    //xhttp.open("POST", "http://dev.local.dlp/api/getExpInfo", true);
+    //xhttp.open("POST", "https://adloha-dlp.dev/api/getExpInfo", true);
+    xhttp.open("POST", "https://dlp-app.herokuapp.com/api/getExpInfo", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(params);
+}
