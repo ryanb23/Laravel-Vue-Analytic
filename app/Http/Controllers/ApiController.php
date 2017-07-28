@@ -85,7 +85,8 @@ class ApiController extends Controller
         $experiment = Experiments::with('user')->find($exp_id);
         if ($experiment) {
             if (isset($experiment->user->domain_url)) {
-                if ($experiment->user->domain_url === $domainName) {
+                // Check if request domain ends with user's domain url
+                if (substr_compare($domainName, $experiment->user->domain_url, -strlen($experiment->user->domain_url)) === 0) {
                     $rules = json_decode($experiment->rules);
                     $options = json_decode($experiment->options);
                     $is_valid = 1;
