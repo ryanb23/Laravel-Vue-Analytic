@@ -103,7 +103,7 @@ class RuleController extends Controller
     }
 
     /**
-     * store Rule
+     * Store the experiment.
      *
      * @return \Illuminate\Http\Response
      */
