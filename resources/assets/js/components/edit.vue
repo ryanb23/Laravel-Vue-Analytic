@@ -101,21 +101,21 @@
                     label:'pagepath',
                     value :'Page Path'
                 }, {
-                    label:'domain',
-                    value :'Domain Url'
+                    label:'hostname',
+                    value :'Hostname'
                 }],
                 rule_operator_type :[{
                     label:'contain',
                     value :'Contains'
                 }, {
                     label:'equalto',
-                    value :'Equals to'
+                    value :'Equals To'
                 }, {
                     label:'not_contain',
-                    value :'Not Contains'
+                    value :'Does Not Contain'
                 }, {
                     label:'not_equalto',
-                    value :'Not Equals to'
+                    value :'Not Equals To'
                 }],
                 option_type :[{
                     label:'text',
