@@ -11,3 +11,5 @@ npm-debug.log
 .env
 /public/images/*
 !/public/images/.gitkeep
+package-lock.json
+composer.lock

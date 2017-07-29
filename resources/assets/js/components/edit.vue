@@ -18,10 +18,10 @@
                         </div>
                         <div v-if="has_rule == 1">
                             <div class="col-md-3">
-                                <v-select v-model="custom_rules.variable" label="value" :options="rule_variable_type" ></v-select>
+                                <v-select v-model="custom_rules.variable" label="value" :searchable="false" :options="rule_variable_type" ></v-select>
                             </div>
                             <div class="col-md-3">
-                                <v-select v-model="custom_rules.operator" label="value"  :options="rule_operator_type"></v-select>
+                                <v-select v-model="custom_rules.operator" label="value"  :searchable="false"  :options="rule_operator_type"></v-select>
                             </div>
                             <div class="col-md-3">
                                 <input type="text" v-model="custom_rules.value" required placeholder="Enter value">
@@ -42,7 +42,7 @@
                                 <input type="text" v-model="option.css_selector" placeholder="Enter CSS Selector Value"  value="" required>
                             </div>
                             <div class="col-md-3">
-                                <v-select v-model="option.type" label="value"  :options="option_type"></v-select>
+                                <v-select v-model="option.type" label="value"  :searchable="false" :options="option_type"></v-select>
                             </div>
                             <div class="col-md-3">
                                 <div v-if="option.type.label === 'image'">
