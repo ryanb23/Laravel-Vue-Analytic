@@ -68,9 +68,9 @@ class ApiController extends Controller
      * API call to run experiment.
      *
      * Expected POST parameters to accept from AJAX request:
-     * - 'full_url' (windows.location.href)
-     * - 'path' (windows.location.pathname)
-     * - 'hostname' (windows.location.hostname)
+     * - 'full_url' (window.location.href)
+     * - 'path' (window.location.pathname)
+     * - 'hostname' (window.location.hostname)
      * 
      * @return  Response
      */
