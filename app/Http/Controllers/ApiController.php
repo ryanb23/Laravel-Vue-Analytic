@@ -67,39 +67,46 @@ class ApiController extends Controller
     /**
      * API call to run experiment.
      *
+     * Expected POST parameters to accept from AJAX request:
+     * - 'full_url' (windows.location.href)
+     * - 'path' (windows.location.pathname)
+     * - 'hostname' (windows.location.hostname)
+     * 
      * @return  Response
      */
     public function getExpInfo() {
+        $key = 'adlp';  // key used in query string
         header('content-type: application/json; charset=utf-8');
         header("access-control-allow-origin: *");
-
-        // Retrieve parameters
-        $fullName = $_POST['fullName'];
-        $pathName = $_POST['pathName'];
-        $domainName = $_POST['domainName'];
-        $querystring = parse_url($fullName, PHP_URL_QUERY);
+        // Retrieve POST parameters
+        $full_url = $_POST['full_url'];
+        $path = $_POST['path'];
+        $hostname = $_POST['hostname'];
+        $querystring = parse_url($full_url, PHP_URL_QUERY);
         parse_str($querystring, $vars);
-        $exp_id = isset($vars['exp_id']) ? $vars['exp_id'] : null ;
-
-        $is_valid = 0;
+        $exp_id = $vars[$key] ?? null ;
+        if ($exp_id === null) {
+            return response()->error('Missing ID', 400);
+        }
+        $is_valid = false;
         $experiment = Experiments::with('user')->find($exp_id);
         if ($experiment) {
             if (isset($experiment->user->domain_url)) {
                 // Check if request domain ends with user's domain url
-                if (substr_compare($domainName, $experiment->user->domain_url, -strlen($experiment->user->domain_url)) === 0) {
+                if (substr_compare($hostname, $experiment->user->domain_url, -strlen($experiment->user->domain_url)) === 0) {
                     $rules = json_decode($experiment->rules);
                     $options = json_decode($experiment->options);
-                    $is_valid = 1;
+                    $is_valid = true;
                     if ($rules != '' && isset($rules->variable)) {
                         switch ($rules->variable) {
                             case 'domain':
-                                $is_valid = self::checkRule($domainName, $rules->value, $rules->operator);
+                                $is_valid = self::checkRule($hostname, $rules->value, $rules->operator);
                                 break;
                             case 'pagepath':
-                                $is_valid = self::checkRule($pathName, $rules->value, $rules->operator);
+                                $is_valid = self::checkRule($path, $rules->value, $rules->operator);
                                 break;
                             default:
-                                $is_valid = 0;
+                                $is_valid = false;
                                 break;
                         }
                     }
