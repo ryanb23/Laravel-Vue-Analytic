@@ -34,8 +34,8 @@ if (exp_id !== null) {
         }
     };
     //xhttp.open("POST", "http://dev.local.dlp/api/getExpInfo", true);
-    xhttp.open("POST", "https://adloha-dlp.dev/api/getExpInfo", true);
-    //xhttp.open("POST", "https://dlp-app.herokuapp.com/api/getExpInfo", true);
+    //xhttp.open("POST", "https://adloha-dlp.dev/api/getExpInfo", true);
+    xhttp.open("POST", "https://dlp-app.herokuapp.com/api/getExpInfo", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(params);
 }
